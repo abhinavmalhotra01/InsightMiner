@@ -11,13 +11,13 @@ export const feedbackSubmit = async (
   try {
     const { name } = req.params;
     const { answer1, answer2, answer3, answer4, answer5, answer6 } = req.body;
-    console.log("hjh")
-    // if (!answer1 || !answer2 || !answer3 || !answer4 || !answer5 || !answer6) {
-    //     console.log(name)
-    //   return res.sendStatus(403).json({ message: "Please fill all fields" });
-    // }
+    // console.log("hjh")
+    if (!answer1 || !answer2 || !answer3 || !answer4 || !answer5 || !answer6) {
+      // console.log(name);
+      return res.status(403).json({ message: "Please fill all fields" }).end();
+    }
     if (name === "Demonetisation") {
-    console.log("a")
+      // console.log("a")
       const feedback = await createFeedbackD({
         name,
         answer1,
@@ -27,21 +27,20 @@ export const feedbackSubmit = async (
         answer5,
         answer6,
       });
-    }
-    if (name === "GST") {
-        console.log("b");
+    } else if (name === "GST") {
+      // console.log("b");
       const feedback = await createFeedbackG({
-        // name,
-        // answer1,
-        // answer2,
-        // answer3,
-        // answer4,
-        // answer5,
-        // answer6,
+        name,
+        answer1,
+        answer2,
+        answer3,
+        answer4,
+        answer5,
+        answer6,
       });
-    }
-    if (name === "MakeInIndia") {
-        console.log("c");
+      // console.log("h")
+    } else if (name === "MakeInIndia") {
+      // console.log("c");
       const feedback = await createFeedbackM({
         name,
         answer1,
@@ -51,9 +50,8 @@ export const feedbackSubmit = async (
         answer5,
         answer6,
       });
-    }
-    if (name === "StartupScheme") {
-        console.log("d");
+    } else if (name === "StartupScheme") {
+      // console.log("d");
       const feedback = await createFeedbackSt({
         name,
         answer1,
@@ -63,9 +61,8 @@ export const feedbackSubmit = async (
         answer5,
         answer6,
       });
-    }
-    if (name === "SwachBharat") {
-        console.log("e");
+    } else if (name === "SwachBharat") {
+      // console.log("e");
       const feedback = await createFeedbackS({
         name,
         answer1,
@@ -76,7 +73,8 @@ export const feedbackSubmit = async (
         answer6,
       });
     }
+    return res.sendStatus(200);
   } catch (error) {
-    return res.sendStatus(404).json({ message: error.message });
+    return res.status(404).end();
   }
 };

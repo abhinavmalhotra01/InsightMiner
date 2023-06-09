@@ -42,4 +42,4 @@ const SwachBharat = mongoose.model("SwachBharat", SwachBharatSchema);
 export default SwachBharat;
 
 export const createFeedbackS = (values: Record<string, any>) =>
-  new SwachBharat(values).save().then((feedback) => feedback.toObject());
+  new SwachBharat(values).save().then((swachbharat) => swachbharat.toObject());

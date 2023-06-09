@@ -41,8 +41,7 @@ const GSTSchema = new Schema({
 const GST = mongoose.model("GST", GSTSchema);
 export default GST;
 export const createFeedbackG = (values: Record<string, any>) =>{
-  console.log(values)
-  new GST(values).save().then((user) => user.toObject());;
+  // console.log(values)
+  new GST(values).save().then((gst) => gst.toObject())
 }
-
 

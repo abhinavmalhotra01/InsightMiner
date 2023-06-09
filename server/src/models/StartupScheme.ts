@@ -44,4 +44,4 @@ const StartUpScheme = mongoose.model(
 );
 export default StartUpScheme;
 export const createFeedbackSt = (values: Record<string, any>) =>
-  new StartUpScheme(values).save().then((feedback) => feedback.toObject());
+  new StartUpScheme(values).save().then((startupscheme) => startupscheme.toObject());

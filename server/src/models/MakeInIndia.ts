@@ -41,4 +41,4 @@ const MakeInIndiaSchema = new Schema({
 const MakeInIndia = mongoose.model("MakiInIndia", MakeInIndiaSchema);
 export default MakeInIndia;
 export const createFeedbackM = (values: Record<string, any>) =>
-  new MakeInIndia(values).save().then((feedback) => feedback.toObject());
+  new MakeInIndia(values).save().then((makeinindia) => makeinindia.toObject());

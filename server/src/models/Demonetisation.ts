@@ -41,4 +41,4 @@ const DemonetisationSchema = new Schema({
 const Demonetisation = mongoose.model("Demonetisation", DemonetisationSchema);
 export default Demonetisation;
 export const createFeedbackD = (values: Record<string, any>) =>
-  new Demonetisation(values).save().then((feedback) => feedback.toObject());
+  new Demonetisation(values).save().then((demonetisation) => demonetisation.toObject());
