@@ -21,8 +21,7 @@ import Analytics from "./components/Analytics";
 import Analysis from "./pages/Analysis";
 
 function App() {
-  const [count, setCount] = useState(0);
-
+  // console.log(5,process.env.BASE_URL)
   return (
     <BrowserRouter>
       <div className="bg-hero-pattern bg-cover bg-no-repeat bg-center">
@@ -33,10 +32,10 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<SignUp />} />
+        
         <Route path="/contribute" element={<ContributePage />} />
         <Route path="/contact" element={<ContactPage />} />
-        <Route path="/dashboard" element={<DashboardPage />
-        } />
+        <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/study" element={<Distribution/>}/>
         <Route path="/analysis" element={<Analysis/>}/>
       </Routes>

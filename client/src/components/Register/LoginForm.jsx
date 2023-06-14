@@ -8,16 +8,21 @@ import { SectionWrapper } from "../../hoc";
 import { slideIn } from "../../utils/motion";
 import { Link } from "react-router-dom";
 import GoogleLogin from "./GoogleLogin";
+import { useLoginUserMutation } from "../../state/api";
+import { setCredentials } from "../../state/auth/authSlice";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
 const LoginForm = () => {
   const formRef = useRef();
   const [form, setForm] = useState({
-    name: "",
     email: "",
-    message: "",
+    password: "",
   });
-
+  const [loginUser, { isLoading }] = useLoginUserMutation();
   const [loading, setLoading] = useState(false);
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const handleChange = (e) => {
     const { target } = e;
     const { name, value } = target;
@@ -28,10 +33,29 @@ const LoginForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    console.log(e);
+    if (!isLoading) {
+      setLoading(true);
+      try {
+        const userData = await loginUser({
+          email: form.email,
+          password: form.password,
+        }).unwrap();
+        // dispatch(setCredentials({ ...userData, form }));
+        setForm({
+          email: "",
+          password: "",
+        });
+        navigate("/contribute");
+      } catch (error) {
+        if (error.originalStatus !== 200) {
+          console.log("Failed to login u", error);
+        }
+      }
+    }
+    setLoading(false);
+    // console.log(form.email, form.password);
   };
 
   return (
@@ -50,17 +74,6 @@ const LoginForm = () => {
           className="mt-12 flex flex-col gap-8"
         >
           <label className="flex flex-col">
-            <span className="text-white font-medium mb-4">Your Name</span>
-            <input
-              type="text"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              placeholder="What's your good name?"
-              className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
-            />
-          </label>
-          <label className="flex flex-col">
             <span className="text-white font-medium mb-4">Your email</span>
             <input
               type="email"
@@ -68,6 +81,17 @@ const LoginForm = () => {
               value={form.email}
               onChange={handleChange}
               placeholder="What's your web address?"
+              className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
+            />
+          </label>
+          <label className="flex flex-col">
+            <span className="text-white font-medium mb-4">Password</span>
+            <input
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder="**********"
               className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
             />
           </label>

@@ -8,14 +8,15 @@ import { SectionWrapper } from "../../hoc";
 import { slideIn } from "../../utils/motion";
 import { Link } from "react-router-dom";
 import GoogleLogin from "./GoogleLogin";
+import { useRegisterUserMutation } from "../../state/api";
 const SignupForm = () => {
   const formRef = useRef();
   const [form, setForm] = useState({
     name: "",
     email: "",
-    message: "",
+    password: "",
   });
-
+  const [registerUser ,{isLoading}] = useRegisterUserMutation()
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -28,10 +29,29 @@ const SignupForm = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    setLoading(true);
-    console.log(e);
+    if(!isLoading){
+      // console.log("ok")
+      setLoading(true);
+      try{
+        await registerUser({username: form.name,email:form.email,password:form.password}).unwrap()
+        setForm({
+          name:"",
+          email: "",
+          password: "",
+        });
+        navigate('/login')
+        console.log('a')
+      }catch(error){
+        // console.log("Failed to save your contribution",error)
+        if(error.originalStatus !== 200){
+          console.log("Failed to register you , kindly go away", error);
+        }
+      }
+    }
+    setLoading(false);
+    // console.log(form.name,form.email,form.password);
   };
 
   return (
@@ -68,6 +88,17 @@ const SignupForm = () => {
               value={form.email}
               onChange={handleChange}
               placeholder="What's your web address?"
+              className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
+            />
+          </label>
+          <label className="flex flex-col">
+            <span className="text-white font-medium mb-4">Password</span>
+            <input
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              placeholder="**********"
               className="bg-tertiary py-4 px-6 placeholder:text-secondary text-white rounded-lg outline-none border-none font-medium"
             />
           </label>

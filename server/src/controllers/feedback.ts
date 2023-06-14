@@ -14,7 +14,7 @@ export const feedbackSubmit = async (
     // console.log("hjh")
     if (!answer1 || !answer2 || !answer3 || !answer4 || !answer5 || !answer6) {
       // console.log(name);
-      return res.status(403).json({ message: "Please fill all fields" }).end();
+      return res.status(404).json({ message: "Please fill all fields" }).end();
     }
     if (name === "Demonetisation") {
       // console.log("a")
@@ -73,7 +73,7 @@ export const feedbackSubmit = async (
         answer6,
       });
     }
-    return res.sendStatus(200);
+    return res.status(200).json({"message":"OK"}).end();
   } catch (error) {
     return res.status(404).end();
   }

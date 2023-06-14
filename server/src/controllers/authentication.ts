@@ -1,32 +1,32 @@
 import express from "express";
 
-import { getUserByEmail, createUser } from "../models/User"
+import { getUserByEmail, createUser } from "../models/User";
 import { authentication, random } from "../utils";
-import dotenv from "dotenv"
-dotenv.config()
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
+
 export const login = async (req: express.Request, res: express.Response) => {
   try {
     const { email, password } = req.body;
 
     if (!email || !password) {
-
-        console.log("s");
-      return res.sendStatus(400);
+      return res.sendStatus(404);
     }
-
     const user = await getUserByEmail(email).select(
       "+authentication.salt +authentication.password"
     );
-
     if (!user) {
-        console.log("d")
-      return res.sendStatus(400);
+      return res.status(403).json({ message: "the email is not registered" });
     }
 
     const expectedHash = authentication(user.authentication.salt, password);
 
     if (user.authentication.password != expectedHash) {
-      return res.sendStatus(403);
+      return res
+        .status(403)
+        .json({ message: "the email and password dont match" });
     }
 
     const salt = random();
@@ -38,11 +38,13 @@ export const login = async (req: express.Request, res: express.Response) => {
     await user.save();
 
     res.cookie(process.env.SECRET, user.authentication.sessionToken, {
-      domain: "localhost",
       path: "/",
+      expires: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
     });
 
-    return res.status(200).json(user).end();
+    const tokenFront = user.authentication.sessionToken;
+
+    res.status(200).json({ tokenFront});
   } catch (error) {
     console.log(error);
     return res.sendStatus(400);
@@ -54,11 +56,11 @@ export const register = async (req: express.Request, res: express.Response) => {
     const { email, password, username } = req.body;
 
     if (!email || !password || !username) {
-      return res.sendStatus(404).json({"message":"fck u"});
+      return res.status(404).json({ message: "fck u" });
     }
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
-      return res.sendStatus(404).json({"message":"oh no"});
+      return res.status(404).json({ message: "oh no" });
     }
     const salt = random();
     const user = await createUser({
@@ -72,6 +74,6 @@ export const register = async (req: express.Request, res: express.Response) => {
     return res.status(200).json(user).end();
   } catch (error) {
     console.log(error);
-    return res.sendStatus(408).json({"message":error.message});
+    return res.status(400).json({ message: error.message });
   }
 };
