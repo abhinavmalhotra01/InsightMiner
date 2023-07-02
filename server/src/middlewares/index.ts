@@ -1,27 +1,31 @@
 import express from "express";
 import { merge, get } from "lodash";
-import { getUserBySessionToken } from "../models/User";
+import { UserModel, getUserBySessionToken } from "../models/User";
 import jwt from "jsonwebtoken";
+// @ts-ignore
+export const verifyToken = async (
+  req:any,
+  res: express.Response,
+  next: express.NextFunction
+) => {
+  try {
+    let token = req.header("Authorization");
 
-// export const verifyToken = async (req:express.Request, res:express.Response, next:express.NextFunction) => {
-//   try {
-//     let token = req.header("Authorization");
+    if (!token) {
+      return res.status(403).send("Access Denied");
+    }
 
-//     if (!token) {
-//       return res.status(403).send("Access Denied");
-//     }
+    if (token.startsWith("Bearer ")) {
+      token = token.slice(7, token.length).trimLeft();
+    }
 
-//     if (token.startsWith("Bearer ")) {
-//       token = token.slice(7, token.length).trimLeft();
-//     }
-
-//     const verified = jwt.verify(token, process.env.JWT_SECRET);
-//     req.user = verified;
-//     next();
-//   } catch (err) {
-//     res.status(500).json({ error: err.message });
-//   }
-// };
+    const verified = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = verified;
+    next();
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
 export const isAuthenticated = async (
   req: express.Request,
   res: express.Response,

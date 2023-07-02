@@ -1,6 +1,7 @@
-import React from 'react'
+import React from "react";
 import { StarsCanvas } from "../components/canvas";
-import FeedbackForm from '../components/FeedbackForm';
+import "react-vertical-timeline-component/style.min.css";
+import ContributeComponent from "../components/ContributeComponent";
 
 const ContributePage = () => {
   return (
@@ -9,10 +10,10 @@ const ContributePage = () => {
         <div className="z-0">
           <StarsCanvas />
         </div>
-        <FeedbackForm/>
+        <ContributeComponent />
       </div>
     </>
   );
-}
+};
 
-export default ContributePage
+export default ContributePage;

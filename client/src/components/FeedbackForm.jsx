@@ -1,11 +1,12 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { styles } from "../styles";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { SectionWrapper } from "../hoc";
 import { slideIn } from "../utils/motion";
 import { useAddFeedbackMutation } from "../state/api";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const FeedbackForm = () => {
   const formRef = useRef();
   const [addFeedback,{isLoading}] = useAddFeedbackMutation()
@@ -15,9 +16,23 @@ const FeedbackForm = () => {
     ans3: "",
     ans4: "",
     ans5: "",
-    ans6: "",
   });
-  const policyName = "GST"
+  const location = useLocation();
+  const navigate = useNavigate();
+  const policyName = location.pathname.split("/")[2];
+  
+  useEffect(()=>{
+    if (
+      policyName != "GST" &&
+      policyName != "Demonetisation" &&
+      policyName != "MakeInIndia" &&
+      policyName != "StartupScheme" &&
+      policyName != "SwachBharat"
+    ) {
+      navigate("/404");
+      console.log("a");
+    }
+  },[])
   const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
     const { target } = e;
@@ -29,6 +44,11 @@ const FeedbackForm = () => {
       [name]: value,
     });
   };
+  const ALPHA_OFFSET = 64; // ASCII code for uppercase 'A'
+
+  function letterToNumber(letter) {
+    return letter.charCodeAt(0) - ALPHA_OFFSET;
+  }
   // const handleClick = (e) => {
   //   const { target } = e;
   //   const { name, value } = target;
@@ -43,23 +63,49 @@ const FeedbackForm = () => {
     e.preventDefault();
     if(!isLoading){
       // console.log("ok")
+      
       setLoading(true);
       try{
-        await addFeedback({name: policyName,answer1:form.ans1,answer2:form.ans2,answer3:form.ans3,answer4:form.ans4,answer5:form.ans5,answer6:form.ans6}).unwrap()
-        setForm('')
+        if (
+          !form.ans1 ||
+          !form.ans2 ||
+          !form.ans3 ||
+          !form.ans4 ||
+          !form.ans5
+        ) {
+          toast.error("Kindly fill all fields", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
+          setLoading(false);
+          return;
+        }
+        await addFeedback({name: policyName,answer1:form.ans1,answer2:form.ans2,answer3:form.ans3,answer4:form.ans4,rating:letterToNumber(form.ans5)}).unwrap();
+        toast.success("Successfully saved your contribution. Thanks !", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
+        setForm({
+          ans1: "",
+          ans2: "",
+          ans3: "",
+          ans4: "",
+          ans5: "",
+        });
       }catch(error){
         // console.log("Failed to save your contribution",error)
         if(error.originalStatus !== 200){
           console.log("Failed to save your contribution", error);
+          toast.error("Failed to save your contribution", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
         }
       }
     }
     setLoading(false);
-    console.log(policyName,form.ans1,form.ans2,form.ans3,form.ans4,form.ans5,form.ans6);
+    // console.log(policyName,form.ans1,form.ans2,form.ans3,form.ans4,form.ans5);
   };
   return (
     <div
-      className={`xl:mt-12 flex xl:flex-row flex-col-reverse gap-10 overflow-hidden`}
+      className={`mt-12 flex xl:flex-row flex-col-reverse gap-10 overflow-hidden`}
     >
       <motion.div
         variants={slideIn("left", "tween", 0.2, 1)}
@@ -73,8 +119,7 @@ const FeedbackForm = () => {
         >
           <label className="flex flex-col">
             <span className="text-white font-medium mb-4">
-              How do you rate the overall impact of the new budget policies on
-              the Indian economy and society?
+              Do you believe this policy has met its intended goals?
             </span>
             <textarea
               type="text"
@@ -88,8 +133,7 @@ const FeedbackForm = () => {
 
           <label className="flex flex-col">
             <span className="text-white font-medium mb-4">
-              How do you rate the impact of the new budget policies on your
-              personal income and expenditure?
+              Did this policy have a good impact on your daily life or not ?
             </span>
             <textarea
               type="text"
@@ -103,9 +147,7 @@ const FeedbackForm = () => {
 
           <label className="flex flex-col">
             <span className="text-white font-medium mb-4">
-              How do you rate the impact of the new budget policies on the
-              sectors or areas that you are interested or involved in, such as
-              education, health, agriculture, etc.?
+              Do you have any concerns about the implementation of this policy ?
             </span>
             <textarea
               type="text"
@@ -119,9 +161,7 @@ const FeedbackForm = () => {
 
           <label className="flex flex-col">
             <span className="text-white font-medium mb-4">
-              What are some of the recommendations or suggestions that you have
-              for improving or modifying the new budget policies or their
-              implementation?
+              Do you think this policy has any unintended consequences?
             </span>
             <textarea
               type="text"
@@ -134,7 +174,7 @@ const FeedbackForm = () => {
           </label>
           <label className="flex flex-col">
             <div className="text-white font-medium mb-4">
-              What is the main objective of the government budget?
+              What is your final verdict for the policy ?
               <br className="sm:block hidden" />
               <button
                 type="button"
@@ -143,7 +183,7 @@ const FeedbackForm = () => {
                 onClick={handleChange}
                 className=" bg-tertiary hover:bg-tertiary text-secondary font-semibold hover:text-white py-2 px-4 border border-gray-700 hover:border-transparent rounded mt-3 mb-3 focus:outline-none focus:ring"
               >
-                A) To allocate resources efficiently
+                A) The policy was a complete waste of country's resources
               </button>
               <br className="sm:block hidden" />
               <button
@@ -153,7 +193,7 @@ const FeedbackForm = () => {
                 onClick={handleChange}
                 className=" bg-tertiary hover:bg-tertiary text-secondary font-semibold hover:text-white py-2 px-4 border border-gray-700 hover:border-transparent rounded mb-3 focus:outline-none focus:ring "
               >
-                B) To promote social welfare
+                B) The policy's agenda was not clear and was not needed
               </button>
               <br className="sm:block hidden" />
               <button
@@ -163,7 +203,8 @@ const FeedbackForm = () => {
                 onClick={handleChange}
                 className=" bg-tertiary hover:bg-tertiary text-secondary font-semibold hover:text-white py-2 px-4 border border-gray-700 hover:border-transparent rounded mb-3 focus:outline-none focus:ring "
               >
-                C) To manage public finances
+                C) The policy could have been great , but lacked in proper
+                implementation
               </button>
               <br className="sm:block hidden" />
               <button
@@ -173,55 +214,17 @@ const FeedbackForm = () => {
                 onClick={handleChange}
                 className=" bg-tertiary hover:bg-tertiary text-secondary font-semibold hover:text-white py-2 px-4 border border-gray-700 hover:border-transparent rounded mb-3 focus:outline-none focus:ring "
               >
-                D) All of the above
-              </button>
-              <br className="sm:block hidden" />
-            </div>
-          </label>
-
-          <label className="flex flex-col">
-            <div className="text-white font-medium mb-4">
-              Which of the following is a type of budget that shows the expected
-              outcomes of various government programs and policies?
-              <br className="sm:block hidden" />
-              <button
-                type="button"
-                name="ans6"
-                value={"A"}
-                onClick={handleChange}
-                className=" bg-tertiary hover:bg-tertiary text-secondary font-semibold hover:text-white py-2 px-4 border border-gray-700 hover:border-transparent rounded mt-3 mb-3 focus:outline-none focus:ring"
-              >
-                A) Performance budget
+                D) The policy is good , but there is still room for improvement
               </button>
               <br className="sm:block hidden" />
               <button
                 type="button"
-                name="ans6"
-                value={"B"}
+                name="ans5"
+                value={"E"}
                 onClick={handleChange}
                 className=" bg-tertiary hover:bg-tertiary text-secondary font-semibold hover:text-white py-2 px-4 border border-gray-700 hover:border-transparent rounded mb-3 focus:outline-none focus:ring "
               >
-                B) Outcome budget
-              </button>
-              <br className="sm:block hidden" />
-              <button
-                type="button"
-                name="ans6"
-                value={"C"}
-                onClick={handleChange}
-                className=" bg-tertiary hover:bg-tertiary text-secondary font-semibold hover:text-white py-2 px-4 border border-gray-700 hover:border-transparent rounded mb-3 focus:outline-none focus:ring "
-              >
-                C) Zero-based budget
-              </button>
-              <br className="sm:block hidden" />
-              <button
-                type="button"
-                name="ans6"
-                value={"D"}
-                onClick={handleChange}
-                className=" bg-tertiary hover:bg-tertiary text-secondary font-semibold hover:text-white py-2 px-4 border border-gray-700 hover:border-transparent rounded mb-3 focus:outline-none focus:ring "
-              >
-                D) Participatory budget
+                E) The policy has no flaws
               </button>
               <br className="sm:block hidden" />
             </div>
@@ -234,6 +237,7 @@ const FeedbackForm = () => {
           </button>
         </form>
       </motion.div>
+      <ToastContainer />
     </div>
   );
 };

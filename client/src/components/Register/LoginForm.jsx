@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import emailjs from "@emailjs/browser";
-import google from "../../assets/company/d2abd662597191.5a9589b09ddf5.jpg";
+// import google from "../../assets/company/d2abd662597191.5a9589b09ddf5.jpg";
 import { styles } from "../../styles";
 import { EarthCanvas } from "../../components/canvas";
 import { SectionWrapper } from "../../hoc";
@@ -9,17 +9,19 @@ import { slideIn } from "../../utils/motion";
 import { Link } from "react-router-dom";
 import GoogleLogin from "./GoogleLogin";
 import { useLoginUserMutation } from "../../state/api";
-import { setCredentials } from "../../state/auth/authSlice";
+// import { setCredentials } from "../../state/auth/authSlice";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-
+import { useDispatch, useSelector } from "react-redux";
+import { setLogin } from "../../state/auth/authSlice";
+import { ToastContainer,toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const LoginForm = () => {
   const formRef = useRef();
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
-  const [loginUser, { isLoading }] = useLoginUserMutation();
+  const [loginUser, { data,isLoading }] = useLoginUserMutation();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -32,24 +34,56 @@ const LoginForm = () => {
       [name]: value,
     });
   };
-
+  function setLocalStorageItem(key, value) {
+    localStorage.setItem(key, JSON.stringify(value));
+  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isLoading) {
       setLoading(true);
       try {
+        if ( !form.email || !form.password) {
+          toast.error("Kindly fill all fields", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
+          setLoading(false);
+          return;
+          // throw new Error();
+        }
         const userData = await loginUser({
           email: form.email,
           password: form.password,
         }).unwrap();
+        toast.success("Successfully logged in !", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
         // dispatch(setCredentials({ ...userData, form }));
         setForm({
           email: "",
           password: "",
         });
-        navigate("/contribute");
+        
+        // setLocalStorageItem("myData", userData); 
+        if(userData){
+          dispatch(
+            setLogin({
+              user:userData.user,
+              token:userData.token,
+              
+            })
+          )
+          console.log('a');
+          
+          // console.log(useSelector((state)=>state.token));
+        }
+        console.log(userData)
+        // {data && console.log(data)};
+        navigate("/dashboard");
       } catch (error) {
         if (error.originalStatus !== 200) {
+          toast.error("Failed to login u ", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
           console.log("Failed to login u", error);
         }
       }
@@ -113,7 +147,7 @@ const LoginForm = () => {
         </p>
         <p className="text-sm mt-5 text-white">
           {/* <img src={google} className=" inline object-contain h-5 w-5 mr-2" alt="G"/> Sign up with Google */}
-          <GoogleLogin />
+          {/* <GoogleLogin /> */}
         </p>
       </motion.div>
 
@@ -123,6 +157,7 @@ const LoginForm = () => {
       >
         <EarthCanvas />
       </motion.div>
+      <ToastContainer/>
     </div>
   );
 };

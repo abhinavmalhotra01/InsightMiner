@@ -1,4 +1,4 @@
-import { createApi,fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_BASE_URL }),
@@ -7,7 +7,7 @@ export const api = createApi({
   endpoints: (builder) => ({
     addFeedback: builder.mutation({
       query: (feedback) => ({
-        url: `/feedback/${feedback.name}`,
+        url: `/sentiment/${feedback.name}`,
         method: "POST",
         body: {
           ...feedback,
@@ -16,29 +16,57 @@ export const api = createApi({
       invalidatesTags: ["Dashboard"],
     }),
     registerUser: builder.mutation({
-      query:(user)=>({
-        url:`/auth/register`,
-        method:"POST",
-        body:{
+      query: (user) => ({
+        url: `/auth/register`,
+        method: "POST",
+        body: {
           ...user,
-        }
-      })
+        },
+      }),
     }),
     loginUser: builder.mutation({
-      query:(user)=>({
-        url:`/auth/login`,
-        method:"POST",
-        body:{
+      query: (user) => ({
+        url: `/auth/login`,
+        method: "POST",
+        body: {
           ...user,
-        }
-      })
-    })
+        },
+      }),
+    }),
+    getFBRating: builder.query({
+      query: (name) => ({
+        url: `/dashboard/ratings/${name.pathName}`,
+        method: "GET",
+      }),
+      providesTags: ["Dashboard"],
+    }),
+    getFBSentiments: builder.query({
+      query: (name) => ({
+        url: `/dashboard/sentiments/${name.pathName}`,
+      }),
+      providesTags: ["Dashboard"],
+    }),
+    getFBConsensus: builder.query({
+      query: (name) => ({
+        url: `/dashboard/consensus/${name.pathName}`,
+      }),
+      providesTags: ["Dashboard"],
+    }),
+    getFBKeyword: builder.query({
+      query: (name) => ({
+        url: `/dashboard/keyword/${name.pathName}`,
+      }),
+      providesTags: ["Dashboard"],
+    }),
   }),
 });
 
 export const {
-    useAddFeedbackMutation,
-    useLoginUserMutation,
-    useRegisterUserMutation
-} = api
-
+  useAddFeedbackMutation,
+  useLoginUserMutation,
+  useRegisterUserMutation,
+  useGetFBConsensusQuery,
+  useGetFBSentimentsQuery,
+  useGetFBRatingQuery,
+  useGetFBKeywordQuery,
+} = api;

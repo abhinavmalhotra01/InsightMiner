@@ -1,14 +1,16 @@
 import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import emailjs from "@emailjs/browser";
-import google from "../../assets/company/d2abd662597191.5a9589b09ddf5.jpg";
+// import google from "../../assets/company/d2abd662597191.5a9589b09ddf5.jpg";
 import { styles } from "../../styles";
 import { EarthCanvas } from "../../components/canvas";
 import { SectionWrapper } from "../../hoc";
 import { slideIn } from "../../utils/motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import GoogleLogin from "./GoogleLogin";
 import { useRegisterUserMutation } from "../../state/api";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const SignupForm = () => {
   const formRef = useRef();
   const [form, setForm] = useState({
@@ -18,7 +20,7 @@ const SignupForm = () => {
   });
   const [registerUser ,{isLoading}] = useRegisterUserMutation()
   const [loading, setLoading] = useState(false);
-
+  const navigate=useNavigate();
   const handleChange = (e) => {
     const { target } = e;
     const { name, value } = target;
@@ -35,7 +37,25 @@ const SignupForm = () => {
       // console.log("ok")
       setLoading(true);
       try{
+        if(!form.name || !form.email || !form.password){
+          toast.error("Kindly fill all fields", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
+          setLoading(false);
+          return;
+          // throw new Error;
+        }
+        if(form.password.length<8){
+          toast.error("Password should be atleat 8 characters long", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
+          setLoading(false);
+          return;
+        }
         await registerUser({username: form.name,email:form.email,password:form.password}).unwrap()
+        toast.success("Successfully registered !", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
         setForm({
           name:"",
           email: "",
@@ -46,6 +66,9 @@ const SignupForm = () => {
       }catch(error){
         // console.log("Failed to save your contribution",error)
         if(error.originalStatus !== 200){
+          toast.error("Failed to register you , Kindly try again", {
+            position: toast.POSITION.BOTTOM_RIGHT,
+          });
           console.log("Failed to register you , kindly go away", error);
         }
       }
@@ -120,7 +143,7 @@ const SignupForm = () => {
         </p>
         <p className="text-sm mt-5 text-white">
           {/* <img src={google} className=" inline object-contain h-5 w-5 mr-2" alt="G"/> Sign up with Google */}
-          <GoogleLogin />
+          {/* <GoogleLogin /> */}
         </p>
       </motion.div>
 
@@ -130,6 +153,7 @@ const SignupForm = () => {
       >
         <EarthCanvas />
       </motion.div>
+      <ToastContainer />
     </div>
   );
 };
