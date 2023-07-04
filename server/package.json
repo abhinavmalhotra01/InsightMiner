@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "ts-node ./src/index.ts"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.3",
