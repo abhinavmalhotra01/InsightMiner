@@ -61,7 +61,9 @@ const SignupForm = () => {
           email: "",
           password: "",
         });
-        navigate('/login')
+        setTimeout(() => {
+          navigate("/login");
+        }, 500);
         console.log('a')
       }catch(error){
         // console.log("Failed to save your contribution",error)

@@ -78,7 +78,9 @@ const LoginForm = () => {
         }
         console.log(userData)
         // {data && console.log(data)};
-        navigate("/dashboard");
+        setTimeout(() => {
+          navigate("/dashboard");
+        }, 500);
       } catch (error) {
         if (error.originalStatus !== 200) {
           toast.error("Failed to login u ", {

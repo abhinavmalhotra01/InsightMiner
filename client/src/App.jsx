@@ -18,6 +18,7 @@ function App() {
     <BrowserRouter>
       <div className="bg-hero-pattern bg-cover bg-no-repeat bg-center">
         <Navbar />
+        <Navbar />
       </div>
 
       <Routes>
@@ -33,7 +34,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
           </Route>
         </Route>
-        <Route path="*" element={<NotFound/>}/>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
