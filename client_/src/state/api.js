@@ -11,7 +11,7 @@ export const api = createApi({
         method: "POST",
         body: {
           ...feedback,
-        },
+        }
       }),
       invalidatesTags: ["Dashboard"],
     }),

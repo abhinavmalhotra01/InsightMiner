@@ -1,5 +1,5 @@
 import Navbar from "./components/Navbar";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import Login from "./pages/LoginPage";
 import SignUp from "./pages/RegisterPage";
@@ -11,31 +11,34 @@ import FeedbackPage from "./pages/FeedbackPage";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import { RequireAuth } from "./state/auth/RequireAuth";
+import { useSelector } from "react-redux";
+import Loader from "./components/Loader";
 
 function App() {
+  // const user= useSelector(state => state.auth.user);
   return (
-    <BrowserRouter>
-      <div className="bg-hero-pattern bg-cover bg-no-repeat bg-center">
-        <Navbar />
-        <Navbar />
-      </div>
+    <Router>
+          <div className="bg-hero-pattern bg-cover bg-no-repeat bg-center">
+            <Navbar />
+            <Navbar />
+          </div>
 
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<SignUp />} />
-        <Route path="/contribute/:name" element={<FeedbackPage />} />
-        <Route path="/contribute" element={<ContributePage />} />
-        <Route path="/contact" element={<ContactPage />} />
-        <Route element={<RequireAuth />}>
-          <Route element={<RootLayout />}>
-            <Route path="/dashboard/:name" element={<DashboardPage />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-          </Route>
-        </Route>
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </BrowserRouter>
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<SignUp />} />
+            <Route path="/contribute/:name" element={<FeedbackPage />} />
+            <Route path="/contribute" element={<ContributePage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route element={<RequireAuth />}>
+              <Route element={<RootLayout />}>
+                <Route path="/dashboard/:name" element={<DashboardPage />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+              </Route>
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+    </Router>
   );
 }
 
