@@ -8,7 +8,7 @@
     "dev": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "ts-node ./src/index.ts",
-    "vercel-build":"ts-node"
+    "vercel-build":"ts-node ./src/index.ts"
   },
   "engines": {
       "node": ">=14.20.1"
