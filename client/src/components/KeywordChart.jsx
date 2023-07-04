@@ -16,9 +16,9 @@ const KeywordChart = ({ pathName }) => {
     },
   };
   let { data, isLoading } = useGetFBKeywordQuery({ pathName });
-  console.log(pathName);
+  // console.log(pathName);
   if (!data || isLoading) {
-    console.log(data);
+    // console.log(data);
     return (
       <div className="h-24 w-24 m-auto object-fill items-center justify-between">
         <Lottie options={defaultOptions} />

@@ -17,7 +17,7 @@ function getMax(arr: number[]): number {
 export const ratings = async (req: express.Request, res: express.Response) => {
   try {
     const { name } = req.params;
-    console.log(name);
+    // console.log(name);
     let results: any[];
     if (name == "GST") {
       results = await GSTFB.aggregate([
@@ -105,7 +105,7 @@ export const ratings = async (req: express.Request, res: express.Response) => {
     // console.log(results);
     return res.status(200).json(results);
   } catch (error) {
-    console.error("Error counting ratings:", error);
+    // console.error("Error counting ratings:", error);
     return res.status(400).json(error);
   }
 };
@@ -202,7 +202,7 @@ export const sentiments = async (
     // console.log(results);
     return res.status(200).json(results);
   } catch (error) {
-    console.error("Error counting ratings:", error);
+    // console.error("Error counting ratings:", error);
     return res.status(400).json(error);
   }
 };
@@ -318,7 +318,7 @@ export const genConsensus = async (
         countOfFive = curr.count;
       }
     });
-    console.log(countOfFive, countOfTwo, countOfOne, countOfFour, countOfThree);
+    // console.log(countOfFive, countOfTwo, countOfOne, countOfFour, countOfThree);
     let genConsensus: string;
     let heading: string;
     const array: number[] = [
@@ -328,7 +328,7 @@ export const genConsensus = async (
       countOfFour,
       countOfThree,
     ];
-    console.log(getMax(array));
+    // console.log(getMax(array));
     if (countOfFive === getMax(array)) {
       heading = "Excellent";
       genConsensus =
@@ -350,15 +350,15 @@ export const genConsensus = async (
         "The general consensus is that the Policy is poor.The majority of people believe that the service is unsatisfactory.";
     }
     if (countOfOne === getMax(array)) {
-      console.log("a");
+      // console.log("a");
       heading = "Horrible";
       genConsensus =
         "The general consensus is that the Policy is horrible.The majority of people believe that the service is terrible.";
     }
-    console.log(heading, genConsensus);
+    // console.log(heading, genConsensus);
     return res.status(200).json({ heading, genConsensus });
   } catch (error) {
-    console.error("Error counting ratings:", error);
+    // console.error("Error counting ratings:", error);
     return res.status(400).json(error);
   }
 };
@@ -498,7 +498,7 @@ export const keyWord = async (
     }else{
       return res.status(400).end();
     }
-    console.log(results);
+    // console.log(results);
     return res.status(200).json(results);
   }catch(error){
     return res.status(400).json(error);

@@ -23,7 +23,7 @@ const SentimentsChart = ({ pathName }) => {
       </div>
     );
   }
-  console.log(data);
+  // console.log(data);
   const colors = [
     "hsl(322, 70%, 50%)",
     "hsl(2, 70%, 50%)",

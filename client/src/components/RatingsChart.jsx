@@ -53,7 +53,7 @@ const RatingsChart = ({ pathName}) => {
             }
         }
     }
-    console.log(formattedData);
+    // console.log(formattedData);
     return (
       <Box
         height={"380px"}

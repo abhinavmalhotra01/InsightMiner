@@ -64,14 +64,14 @@ const SignupForm = () => {
         setTimeout(() => {
           navigate("/login");
         }, 500);
-        console.log('a')
+        // console.log('a')
       }catch(error){
         // console.log("Failed to save your contribution",error)
         if(error.originalStatus !== 200){
           toast.error("Failed to register you , Kindly try again", {
             position: toast.POSITION.BOTTOM_RIGHT,
           });
-          console.log("Failed to register you , kindly go away", error);
+          // console.log("Failed to register you , kindly go away", error);
         }
       }
     }

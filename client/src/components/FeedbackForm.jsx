@@ -30,7 +30,7 @@ const FeedbackForm = () => {
       policyName != "SwachBharat"
     ) {
       navigate("/404");
-      console.log("a");
+      // console.log("a");
     }
   },[])
   const [loading, setLoading] = useState(false);
@@ -93,7 +93,7 @@ const FeedbackForm = () => {
       }catch(error){
         // console.log("Failed to save your contribution",error)
         if(error.originalStatus !== 200){
-          console.log("Failed to save your contribution", error);
+          // console.log("Failed to save your contribution", error);
           toast.error("Failed to save your contribution", {
             position: toast.POSITION.BOTTOM_RIGHT,
           });
