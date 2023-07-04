@@ -8,9 +8,9 @@ import ContactPage from "./pages/ContactPage";
 import DashboardPage from "./pages/DashboardPage";
 import RootLayout from "./layouts/RootLayout";
 import FeedbackPage from "./pages/FeedbackPage";
-import { RequireAuth } from "./state/auth/requireAuth";
 import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
+import { RequireAuth } from "./state/auth/RequireAuth";
 
 function App() {
   
