@@ -9,7 +9,7 @@ import { useLoginUserMutation } from "../../state/api";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../state/auth/authSlice";
-import { ToastContainer,toast } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 const LoginForm = () => {
   const formRef = useRef();
@@ -17,7 +17,7 @@ const LoginForm = () => {
     email: "",
     password: "",
   });
-  const [loginUser, { data,isLoading }] = useLoginUserMutation();
+  const [loginUser, { data, isLoading }] = useLoginUserMutation();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -38,7 +38,7 @@ const LoginForm = () => {
     if (!isLoading) {
       setLoading(true);
       try {
-        if ( !form.email || !form.password) {
+        if (!form.email || !form.password) {
           toast.error("Kindly fill all fields", {
             position: toast.POSITION.BOTTOM_RIGHT,
           });
@@ -46,6 +46,9 @@ const LoginForm = () => {
           return;
           // throw new Error();
         }
+        toast.warning("This might take a while , Kindly wait :)", {
+          position: toast.POSITION.BOTTOM_RIGHT,
+        });
         const userData = await loginUser({
           email: form.email,
           password: form.password,
@@ -58,18 +61,17 @@ const LoginForm = () => {
           email: "",
           password: "",
         });
-        
-        // setLocalStorageItem("myData", userData); 
-        if(userData){
+
+        // setLocalStorageItem("myData", userData);
+        if (userData) {
           dispatch(
             setLogin({
-              user:userData.user,
-              token:userData.token,
-              
+              user: userData.user,
+              token: userData.token,
             })
-          )
+          );
           // console.log('a');
-          
+
           // console.log(useSelector((state)=>state.token));
         }
         // console.log(userData)
@@ -155,7 +157,7 @@ const LoginForm = () => {
       >
         <EarthCanvas />
       </motion.div>
-      <ToastContainer/>
+      <ToastContainer />
     </div>
   );
 };
