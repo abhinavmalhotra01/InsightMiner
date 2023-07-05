@@ -28,7 +28,7 @@ server.listen(process.env.PORT, () => {
     `server is currently running on http://localhost:${process.env.PORT}`
   );
 });
-const MONGO_URL = process.env.MONGO_URL; // DB URI
+const MONGO_URL = process.env.MONGO_URL!; // DB URI
 
 mongoose.Promise = Promise;
 mongoose.connect(MONGO_URL);
