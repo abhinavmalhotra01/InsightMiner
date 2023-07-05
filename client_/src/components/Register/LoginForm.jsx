@@ -46,7 +46,7 @@ const LoginForm = () => {
           return;
           // throw new Error();
         }
-        toast.warning("This might take a while , Kindly wait :)", {
+        toast.error("This might take a while , Kindly wait :)", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
         const userData = await loginUser({

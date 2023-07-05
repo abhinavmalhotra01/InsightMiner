@@ -49,7 +49,7 @@ const SignupForm = () => {
           setLoading(false);
           return;
         }
-        toast.warning("This might take a while , Kindly wait :)", {
+        toast.error("This might take a while , Kindly wait :)", {
           position: toast.POSITION.BOTTOM_RIGHT,
         });
         await registerUser({username: form.name,email:form.email,password:form.password}).unwrap()
