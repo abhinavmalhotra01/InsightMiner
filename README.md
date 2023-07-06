@@ -36,6 +36,9 @@ InsightMiner
       Natural Language Processing (NLP) Techniques
     </summary>
     The website utilizes NLP techniques to analyze and extract valuable insights from the feedback data. These techniques involve processing and understanding the natural language used by citizens, including sentiment analysis, keyword extraction, and topic modeling.
+
+![image](https://github.com/abhinavmalhotra01/InsightMiner/assets/113239170/815f4484-bf2b-4e69-821e-fea540522f26)
+
   </details>
   <details>
     <summary>
@@ -75,4 +78,7 @@ InsightMiner
       Policy Impact Assessment
     </summary>
     The insights derived from the feedback data and analysis can be utilized to assess the impact of the government policies. Policymakers can make informed decisions and adjustments based on the feedback received, enhancing the effectiveness of the policies.
+
+![image](https://github.com/abhinavmalhotra01/InsightMiner/assets/113239170/d8d2f952-d0f7-4cdc-8e0f-8251d3bfb06e)
+
   </details>
